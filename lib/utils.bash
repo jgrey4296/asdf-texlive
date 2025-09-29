@@ -14,11 +14,13 @@
 
 set -euo pipefail
 
-# TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for <YOUR TOOL>.
 GH_REPO="https://github.com/jgrey4296/asdf-texlive.git"
 TOOL_NAME="texlive"
 TOOL_TEST="tlmgr --help"
 BIN_DIR="bin/x86_64-linux"
+
+# TODO: list versions from here, and then download the respective instal-tl-unx.tar.gz
+TEXLIVE_ARCHIVE="https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/"
 
 fail() {
 	echo -e "asdf-$TOOL_NAME: $*"
