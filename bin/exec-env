@@ -1,0 +1,15 @@
+# #  exec-env -*- mode: sh -*-
+# https://asdf-vm.com/plugins/create.html#bin-exec-env
+# prepare the environment for executing tool shims
+#
+
+set -euo pipefail
+
+function export_tex_base() {
+    if [[ -z ${TEXBASE:-""} ]]; then
+        export TEXBASE="${ASDF_INSTALL_PATH}"
+        export MANPATH="$TEXBASE/texmf-dist/doc/man:$MANPATH"
+    fi
+}
+
+export_tex_base
