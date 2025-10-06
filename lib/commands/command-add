@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# #  command-add -*- mode: sh -*-
+
+set -euo pipefail
+
+if [[ $# -eq 0 ]]; then
+    echo "Specify packages to install"
+else
+    tlmgr install "$@"
+    printf "%s\n" "$@" >> ./tex.reqs
+fi

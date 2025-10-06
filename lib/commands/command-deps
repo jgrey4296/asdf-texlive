@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#  command-deps -*- mode: sh -*-
+set -euo pipefail
+
+echo "Installing tex dependencies"
+if [[ $# -eq 0 ]]; then
+    tlmgr install `cat tex.reqs`
+else
+    tlmgr install `cat $1`
+fi

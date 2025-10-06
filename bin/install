@@ -14,3 +14,9 @@ plugin_dir=$(dirname "$(dirname "$current_script_path")")
 source "${plugin_dir}/lib/utils.bash"
 
 install_version "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_INSTALL_PATH"
+
+# Now install basic binaries
+
+"$ASDF_INSTALL_PATH/$BIN_DIR/tlmgr" install latex-bin collection-basic
+
+# TODO check key?

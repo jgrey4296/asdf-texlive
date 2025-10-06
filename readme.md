@@ -7,5 +7,7 @@ see: https://www.tug.org/texlive/doc/install-tl.html
 Sets $XDG_CONFIG_HOME/texlive for the texmfconfig directory.
 All other installation directories are within asdf.
 
-installs the minimal scheme.
-call tlmgr install latex-bin afterwards
+Adds three commands:
+- `asdf cmd texlive reqs` : create a `tex.reqs` file listing installed packages
+- `asdf cmd texlive deps` : read a `tex.reqs` file and install the listed packages
+- `asdf cmd texlive add`  : install a give package, and insert it into the `tex.reqs` file
