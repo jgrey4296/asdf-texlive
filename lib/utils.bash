@@ -21,6 +21,8 @@ BIN_DIR="bin/x86_64-linux"
 
 # TODO: list versions from here, and then download the respective instal-tl-unx.tar.gz
 TEXLIVE_ARCHIVE="https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/"
+INSTALL_SCRIPT="install-tl-unx"
+INSTALL_SCRIPT_URL="https://mirror.ctan.org/systems/texlive/tlnet"
 
 fail() {
 	echo -e "asdf-$TOOL_NAME: $*"
@@ -41,7 +43,6 @@ function sort_versions() {
 
 function list_all_versions() {
 	# TODO: Adapt this. By default we simply list the tag names from GitHub releases.
-	# Change this function if <YOUR TOOL> has other means of determining installable versions.
 	echo "2025"
 }
 
@@ -50,10 +51,10 @@ function download_release() {
 	version="$1"
 	filename="$2"
 
-	url="https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz"
+	url="$INSTALL_SCRIPT_URL/$filename"
 
 	echo "* Downloading $TOOL_NAME release $version..."
-	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
+	curl "${curl_opts[@]}" -o "$ASDF_DOWNLOAD_PATH/$filename" -C - "$url" || fail "Could not download $url"
 
 }
 
@@ -74,7 +75,7 @@ function install_version() {
 		mkdir -p "$install_path/user/texmf-var"
 
 
-		perl "$ASDF_DOWNLOAD_PATH/install-tl" \
+		perl "$ASDF_DOWNLOAD_PATH/$INSTALL_SCRIPT" \
 		--no-interaction \
 		-scheme=minimal \
 		-texdir "$install_path" \
