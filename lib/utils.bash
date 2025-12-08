@@ -21,7 +21,7 @@ BIN_DIR="bin/x86_64-linux"
 
 # TODO: list versions from here, and then download the respective instal-tl-unx.tar.gz
 TEXLIVE_ARCHIVE="https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/"
-INSTALL_SCRIPT="install-tl-unx"
+INSTALL_SCRIPT="install-tl"
 INSTALL_SCRIPT_URL="https://mirror.ctan.org/systems/texlive/tlnet"
 
 fail() {
@@ -53,7 +53,7 @@ function download_release() {
 
 	url="$INSTALL_SCRIPT_URL/$filename"
 
-	echo "* Downloading $TOOL_NAME release $version..."
+	echo "* Downloading $TOOL_NAME release $version as $filename..."
 	curl "${curl_opts[@]}" -o "$ASDF_DOWNLOAD_PATH/$filename" -C - "$url" || fail "Could not download $url"
 
 }
@@ -71,6 +71,7 @@ function install_version() {
 	# if texuserdir is set else:
 	TEXUSERDIR="$XDG_CONFIG_HOME/texlive"
 
+	echo "* Running Installer..."
 	(
 		mkdir -p "$install_path/user/texmf-var"
 
