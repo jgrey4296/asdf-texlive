@@ -22,4 +22,4 @@ install_version "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_INSTALL_PATH
 # TODO check key?
 
 # delete weird bin/../man symlink to directoy
-rm "ASDF_INSTALL_PATH/$BIN_DIR/man"
+rm "$ASDF_INSTALL_PATH/$BIN_DIR/man"
