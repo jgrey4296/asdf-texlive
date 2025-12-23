@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+#  command-deps -*- mode: sh -*-
+set -euo pipefail
+
+function print-help () {
+    # test args, if the last one is -h or --help
+    # print help and exit
+    case "${@: -1}" in
+        -h|--help) ;;
+        *) if [[ "$#" -gt 0 ]]; then
+               return
+           fi
+           ;;
+    esac
+    echo -e "
+usage: asdf cmd texlive import [-h] [target]
+
+Reads an environment file and installs the listed texlive packages.
+
+positional arguments:
+target : the file to read. Defaults to ./tex.env
+
+options:
+-h, --help    : show this help message and exit
+
+
+"
+    exit "${PRINTED_HELP:-2}"
+}
+
+print-help "$@"
+
+env_file="${1:-./tex.env}"
+echo "* Installing tex environment from ./tex.env"
+tlmgr install "$(< "$env_file")"
+echo "* Finished"

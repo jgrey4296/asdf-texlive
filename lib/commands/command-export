@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+#  command-reqs -*- mode: sh -*-
+set -euo pipefail
+
+echo "* Creating tex requirements file..."
+
+function print-help () {
+    # test args, if the last one is -h or --help
+    # print help and exit
+    case "${@: -1}" in
+        -h|--help) ;;
+        *) if [[ "$#" -gt 0 ]]; then
+               return
+           fi
+           ;;
+    esac
+    echo -e "
+usage: asdf cmd texlive export [-h] [target]
+
+Exports installed texlive packages to a file, for easy re-installation.
+
+positional arguments:
+target : The file to record installed packages in. Defaults to 'tex.env'
+
+options:
+-h, --help    : show this help message and exit
+
+"
+    exit "${PRINTED_HELP:-2}"
+}
+
+print-help "$@"
+
+env_file="${1:-./tex.env}"
+echo "* Exporting tex environment to $env_file"
+tlmgr info --only-installed --data name > "$env_file"
+echo "* Finished"

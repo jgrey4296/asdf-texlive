@@ -21,14 +21,31 @@ source "${plugin_dir}/lib/utils.bash"
 mkdir -p "$ASDF_DOWNLOAD_PATH"
 
 release_file="$INSTALL_SCRIPT-unx.tar.gz"
+url="$INSTALL_SCRIPT_URL/$release_file"
 
 # Download tar.gz file to the download directory
-download_release "$ASDF_INSTALL_VERSION" "$release_file"
+echo "* Downloading $TOOL_NAME release $ASDF_INSTALL_VERSION as $release_file..."
+( curl "${curl_opts[@]}" \
+    -o "$ASDF_DOWNLOAD_PATH/$release_file" \
+    -C - "$url"
+) || fail "Could not download $url"
+
+echo "* Validating..."
+( curl "${curl_opts[@]}" \
+    -o "$ASDF_DOWNLOAD_PATH/${release_file}.sha512" \
+    -C - "${url}.sha512"
+) || fail "Could not download $url.sha512"
+
+sha512sum -c "$ASDF_DOWNLOAD_PATH/${release_file}.sha512" || fail "Validation failed"
 
 #  Extract contents of tar.gz file into the download directory
 echo "* Extracting $release_file..."
-tar -xzf "$ASDF_DOWNLOAD_PATH/$release_file" -C "$ASDF_DOWNLOAD_PATH" --strip-components=1 || fail "Could not extract $release_file"
+( tar -xzf "$ASDF_DOWNLOAD_PATH/$release_file" \
+    -C "$ASDF_DOWNLOAD_PATH" \
+    --strip-components=1
+) || fail "Could not extract $release_file"
 
-echo "* Removing Archive..."
+echo "* Cleaning Up..."
 # Remove the tar.gz file since we don't need to keep it
 rm "$ASDF_DOWNLOAD_PATH/$release_file"
+rm "$ASDF_DOWNLOAD_PATH/${release_file}.sha512"

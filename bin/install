@@ -15,11 +15,41 @@ source "${plugin_dir}/lib/utils.bash"
 
 install_version "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_INSTALL_PATH"
 
+if [ "$ASDF_INSTALL_TYPE" != "version" ]; then
+    fail "asdf-$TOOL_NAME supports release installs only"
+fi
+
+# if texuserdir is set else:
+TEXUSERDIR="$XDG_CONFIG_HOME/texlive"
+
+mkdir -p "$ASDF_INSTALL_PATH/user/texmf-var"
+echo "* Running Installer..."
+(
+    perl "$ASDF_DOWNLOAD_PATH/$INSTALL_SCRIPT" \
+j    --no-interaction \j
+    -scheme=minimal \
+    -texdir "$ASDF_INSTALL_PATH" \
+    -texmflocal "$ASDF_INSTALL_PATH/texmf-local" \
+    -texmfsysvar "$ASDF_INSTALL_PATH/texmf-var" \
+    -texmfsysconfig "$ASDF_INSTALL_PATH/texmf-config" \
+    -texmfhome "$ASDF_INSTALL_PATH/user" \
+    -texmfvar "$ASDF_INSTALL_PATH/user/texmf-var" \
+    -texmfconfig "$TEXUSERDIR"
+) || (
+    rm -rf "$ASDF_INSTALL_PATH"
+    fail "An error occurred while installing $TOOL_NAME $ASDF_INSTALL_VERSION."
+)
+
 # Now install basic binaries
-
-"$ASDF_INSTALL_PATH/$BIN_DIR/tlmgr" install latex-bin collection-basic
-
-# TODO check key?
+echo "* Installing core packages..."
+"$ASDF_ASDF_INSTALL_PATH/$BIN_DIR/tlmgr" install latex-bin collection-basic
 
 # delete weird bin/../man symlink to directoy
-rm "$ASDF_INSTALL_PATH/$BIN_DIR/man"
+rm "$ASDF_ASDF_INSTALL_PATH/$BIN_DIR/man"
+
+(
+    tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
+    test -x "$ASDF_INSTALL_PATH/$BIN_DIR/$tool_cmd" || fail "Expected $ASDF_INSTALL_PATH/$BIN_DIR/$tool_cmd to be executable."
+)
+
+echo "* $TOOL_NAME $ASDF_INSTALL_VERSION installation was successful!"

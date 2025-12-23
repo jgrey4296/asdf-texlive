@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# #  command-add -*- mode: sh -*-
+
+set -euo pipefail
+
+function print-help () {
+    # test args, if the last one is -h or --help
+    # print help and exit
+    case "${@: -1}" in
+        -h|--help) ;;
+        *) if [[ "$#" -gt 0 ]]; then
+               return
+           fi
+           ;;
+    esac
+    echo -e "
+usage: asdf cmd texlive install [-h] [args ...]
+
+Installs texlive packages
+
+positional arguments:
+args          : the packages to install
+
+options:
+-h, --help    : show this help message and exit
+
+
+"
+    exit "${PRINTED_HELP:-2}"
+}
+
+print-help "$@"
+
+if [[ "$#" -eq 0 ]]; then
+    echo "* Specify packages to install"
+    exit 1
+fi
+
+echo "* Installing tex packages"
+tlmgr install "$@"
+echo "* Finished"
